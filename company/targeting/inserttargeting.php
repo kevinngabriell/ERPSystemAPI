@@ -15,15 +15,12 @@ require_once('../../connection/connection.php');
 //Checking call API method
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $company_id = $_POST['company_id'];
-    $company_name = $_POST['company_name'];
-    $company_address = $_POST['company_address'];
-    $company_phone = $_POST['company_phone'];
-    $company_pic_name = $_POST['company_pic_name'];
-    $company_pic_contact = $_POST['company_pic_contact'];
+    $target_year = $_POST['target_year'];
+    $target_value = $_POST['target_value'];
 
-    $update_customer_query = "UPDATE customer SET company_name = '$company_name', company_address = '$company_address', company_phone = '$company_phone', company_pic_name = '$company_pic_name', company_pic_contact = '$company_pic_contact' WHERE company_id = '$company_id'";
+    $target_input_query = "INSERT IGNORE INTO targeting (targeting_id, company, target_year, target_value) VALUES (UUID(), '$company_id', '$target_year', '$target_value')";
 
-    if(mysqli_query($connect, $update_customer_query)){
+    if(mysqli_query($connect, $target_input_query)){
         http_response_code(200);
         echo json_encode(
             array(
@@ -53,4 +50,5 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         )
     );
 }
+
 ?>
