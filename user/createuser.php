@@ -31,10 +31,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     if($row){
         //If username is exist 
-        http_response_code(404);
+        http_response_code(203);
         echo json_encode(
             array(
-                "StatusCode" => 404,
+                "StatusCode" => 203,
                 'Status' => 'Not Found',
                 "message" => "Error: The username is already exist. Please use another username"
             )
@@ -71,11 +71,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     )
                 );
             }
-        } else {
-            http_response_code(404);
+        } else{
+            http_response_code(204);
             echo json_encode(
                 array(
-                    "StatusCode" => 404,
+                    "StatusCode" => 204,
                     'Status' => 'Not Found',
                     "message" => "Error: You have reached the limit user. Please call IT Support for help"
                 )

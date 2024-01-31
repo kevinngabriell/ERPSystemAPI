@@ -45,20 +45,20 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 )
             );
         } else {
-            http_response_code(404);
+            http_response_code(204);
             echo json_encode(
                 array(
-                    "StatusCode" => 404,
+                    "StatusCode" => 204,
                     'Status' => 'Error',
                     "message" => "Error: Password is not match"
                 )
             );
         }
     } else {
-        http_response_code(404);
+        http_response_code(203);
         echo json_encode(
             array(
-                "StatusCode" => 404,
+                "StatusCode" => 203,
                 'Status' => 'Error',
                 "message" => "Error: Username cannot be found in systems"
             )
