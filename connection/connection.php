@@ -1,7 +1,7 @@
 <?php
 
-$hostname = "erp_systems";
-$database = "";
+$hostname = "localhost";
+$database = "erp_systems";
 $username = "root";
 $password = "";
 

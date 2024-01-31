@@ -14,11 +14,15 @@ require_once('../connection/connection.php');
 
 //Checking call API method
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $permission_access = $_POST["permission_access"];
+    $company_name = $_POST['company_name'];
+    $company_address = $_POST['company_address'];
+    $company_phone = $_POST['company_phone'];
+    $company_web = $_POST['company_web'];
+    $company_industry = $_POST['company_industry'];
 
-    $insert_permission_query = "INSERT IGNORE INTO permission (permission_id, permission_access) VALUES (UUID(), '$permission_access')";
+    $insert_company_query = "INSERT IGNORE INTO company (company_id, company_name, company_address, company_phone, company_web, company_industry) VALUES (UUID(), '$company_name', '$company_address', '$company_phone', '$company_web', '$company_industry')";
 
-    if (mysqli_query($connect, $insert_permission_query)) {
+    if(mysqli_query($connect, $insert_company_query)){
         http_response_code(200);
         echo json_encode(
             array(
@@ -37,6 +41,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             )
         );
     }
+
 } else {
     http_response_code(404);
     echo json_encode(
@@ -47,4 +52,5 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         )
     );
 }
+
 ?>
