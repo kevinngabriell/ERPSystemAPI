@@ -14,7 +14,7 @@ require_once('../../connection/connection.php');
 
 //Checking call API method
 if($_SERVER['REQUEST_METHOD'] === 'GET'){
-    $origin_query = "SELECT A1.origin_name, A1.origin_is_free_trade, A2.region_name FROM origin A1 JOIN region A2 ON A2.region_id = A1.origin_region ORDER BY A1.origin_name ASC;";
+    $origin_query = "SELECT A1.origin_id, A1.origin_name, A1.origin_is_free_trade, A2.region_name FROM origin A1 JOIN region A2 ON A2.region_id = A1.origin_region ORDER BY A1.origin_name ASC;";
     $origin_result = mysqli_query($connect, $origin_query);
 
     $origin_array = array();
@@ -22,6 +22,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET'){
         array_push(
             $origin_array,
             array(
+                'origin_id' => $origin_row['origin_id'],
                 'origin_name' => $origin_row['origin_name'],
                 'origin_is_free_trade' => $origin_row['origin_is_free_trade'],
                 'region_name' => $origin_row['region_name']

@@ -18,10 +18,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $company_name = $_POST['company_name'];
     $company_address = $_POST['company_address'];
     $company_phone = $_POST['company_phone'];
+    $company_email = $_POST['company_email'];
     $company_web = $_POST['company_web'];
     $company_industry = $_POST['company_industry'];
 
-    $update_company_query = "UPDATE company SET company_name  = '$company_name', company_address = '$company_address', company_phone = '$company_phone', company_web = '$company_web', company_industry = '$company_industry' WHERE company_id = '$company_id'";
+    $update_company_query = "UPDATE company SET company_name  = '$company_name', company_address = '$company_address', company_email = '$company_email',company_phone = '$company_phone', company_web = '$company_web', company_industry = '$company_industry' WHERE company_id = '$company_id'";
 
     if(mysqli_query($connect, $update_company_query)){
         http_response_code(200);
