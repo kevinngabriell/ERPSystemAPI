@@ -16,7 +16,7 @@ require_once('../../connection/connection.php');
 if($_SERVER['REQUEST_METHOD'] === 'GET'){
     $company = $_GET['company'];
 
-    $customer_query = "SELECT company_id, company_name, company_address, company_phone FROM customer WHERE company = '$company'";
+    $customer_query = "SELECT company_id, company_name, company_address, company_phone FROM customer WHERE company = '$company' ORDER BY company_name ASC";
     $customer_result = mysqli_query($connect, $customer_query);
 
     $customer_array = array();
