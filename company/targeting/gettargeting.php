@@ -1,26 +1,30 @@
 <?php
-//Header access is required
+// Header access is required
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
-//Display error message
+// Display error message
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-//Connection access
+// Connection access
 require_once('../../connection/connection.php');
 
-//Checking call API method
-if($_SERVER['REQUEST_METHOD'] === 'GET'){
+// Checking call API method
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $company_id = $_GET['company_id'];
 
-    $targeting_query = "SELECT targeting_id, target_year, target_value FROM targeting WHERE company = '$company_id'";
+    // Get current year
+    $current_year = date('Y');
+
+    // Modify the query to get targeting data for the current year and next year
+    $targeting_query = "SELECT targeting_id, target_year, target_value FROM targeting WHERE company = '$company_id' AND target_year >= $current_year AND target_year <= " . ($current_year + 1);
     $targeting_result = mysqli_query($connect, $targeting_query);
 
     $targeting_array = array();
-    while($targeting_row = mysqli_fetch_array($targeting_result)){
+    while ($targeting_row = mysqli_fetch_array($targeting_result)) {
         array_push(
             $targeting_array,
             array(
@@ -31,7 +35,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET'){
         );
     }
 
-    if($targeting_array){
+    if ($targeting_array) {
         echo json_encode(
             array(
                 'StatusCode' => 200,
