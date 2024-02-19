@@ -14,33 +14,27 @@ require_once('../../connection/connection.php');
 
 //Checking call API method
 if($_SERVER['REQUEST_METHOD'] === 'GET'){
-    $company = $_GET['company'];
+    $supplier = $_GET['supplier'];
 
-    $supplier_query = "SELECT A1.supplier_id, A1.supplier_name, A1.supplier_phone, A2.origin_name, A1.supplier_pic_name, A1.supplier_pic_contact, A1.supplier_origin FROM supplier A1 JOIN origin A2 ON A2.origin_id = A1.supplier_origin WHERE A1.company = '$company' ORDER BY A1.supplier_name ASC;";
-    $supplier_result = mysqli_query($connect, $supplier_query);
+    $origin_query = "SELECT supplier_pic_name FROM supplier WHERE supplier_id = '$supplier';;";
+    $origin_result = mysqli_query($connect, $origin_query);
 
-    $supplier_array = array();
-    while($supplier_row = mysqli_fetch_array($supplier_result)){
+    $origin_array = array();
+    while($origin_row = mysqli_fetch_array($origin_result)){
         array_push(
-            $supplier_array,
+            $origin_array,
             array(
-                'supplier_id' => $supplier_row['supplier_id'],
-                'supplier_name' => $supplier_row['supplier_name'],
-                'supplier_phone' => $supplier_row['supplier_phone'],
-                'origin_name' => $supplier_row['origin_name'],
-                'supplier_pic_name' => $supplier_row['supplier_pic_name'],
-                'supplier_pic_contact' => $supplier_row['supplier_pic_contact'],
-                'supplier_origin' => $supplier_row['supplier_origin'],
+                'supplier_pic_name' => $origin_row['supplier_pic_name']
             )
         );
     }
 
-    if($supplier_array){
+    if($origin_array){
         echo json_encode(
             array(
                 'StatusCode' => 200,
                 'Status' => 'Success',
-                'Data' => $supplier_array
+                'Data' => $origin_array
             )
         );
     } else {
@@ -52,6 +46,8 @@ if($_SERVER['REQUEST_METHOD'] === 'GET'){
             )
         );
     }
+
+
 
 } else {
     http_response_code(404);
