@@ -14,6 +14,7 @@ require_once('../connection/connection.php');
 
 // Checking call API method
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $PONumber = $_GET['PONumber'];
 
     $purchase_query = "SELECT 
     PONumber,
@@ -69,10 +70,10 @@ FROM (
     LEFT JOIN payment A5 ON A1.POPayment = A5.payment_id
     LEFT JOIN purchaseStatus A6 ON A1.POStatus = A6.PO_Status_ID
     LEFT JOIN purchaseType A7 ON A1.POType = A7.PO_Type_ID
-    WHERE A1.POType = '741ead94-d157-11ee-8'
+    WHERE A1.POType = '741ead94-d157-11ee-8' AND A1.PONumber = '$PONumber'
 ) AS PivotData
 GROUP BY PONumber
-ORDER BY PONumber DESC LIMIT 4;";
+ORDER BY PONumber DESC;";
     $purchase_result = mysqli_query($connect, $purchase_query);
 
     $purchase_array = array();
@@ -88,7 +89,26 @@ ORDER BY PONumber DESC LIMIT 4;";
                 'PO_Status_Name' => $purchase_row['PO_Status_Name'],
                 'PO_Type_Name' => $purchase_row['PO_Type_Name'],
                 'InsertBy' => $purchase_row['InsertBy'],
-                'ProductName1' => $purchase_row['ProductName1']
+                'ProductName1' => $purchase_row['ProductName1'],
+                'UnitPrice1' => $purchase_row['UnitPrice1'],
+                'Quantity1' => $purchase_row['Quantity1'],
+                'PackagingSize1' => $purchase_row['PackagingSize1'],
+                'ProductName2' => $purchase_row['ProductName2'],
+                'UnitPrice2' => $purchase_row['UnitPrice2'],
+                'Quantity2' => $purchase_row['Quantity2'],
+                'PackagingSize2' => $purchase_row['PackagingSize2'],
+                'ProductName3' => $purchase_row['ProductName3'],
+                'UnitPrice3' => $purchase_row['UnitPrice3'],
+                'Quantity3' => $purchase_row['Quantity3'],
+                'PackagingSize3' => $purchase_row['PackagingSize3'],
+                'ProductName4' => $purchase_row['ProductName4'],
+                'UnitPrice4' => $purchase_row['UnitPrice4'],
+                'Quantity4' => $purchase_row['Quantity4'],
+                'PackagingSize4' => $purchase_row['PackagingSize4'],
+                'ProductName5' => $purchase_row['ProductName5'],
+                'UnitPrice5' => $purchase_row['UnitPrice5'],
+                'Quantity5' => $purchase_row['Quantity5'],
+                'PackagingSize5' => $purchase_row['PackagingSize5'],
             )
         );
     }
