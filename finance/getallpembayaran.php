@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $totalItems = $totalRow['total'];
 
     // Query to get paginated results
-    $query = "SELECT A1.amount, A2.account_name, A1.bank_account, A1.id_transaction
+    $query = "SELECT A1.amount, A2.account_name, A1.bank_account, A1.id_transaction, A1.date 
               FROM financeTransaction A1
               LEFT JOIN account_code A2 ON A1.accountcode = A2.code
               WHERE A1.finance_category = '1d604104-226d-11ef-a'
@@ -46,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'amount' => $row['amount'],
                 'account_name' => $row['account_name'],
                 'bank_account' => $row['bank_account'],
-                'id_transaction' => $row['id_transaction']
+                'id_transaction' => $row['id_transaction'],
+                'date' => $row['date']
             )
         );
     }
