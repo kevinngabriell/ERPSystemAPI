@@ -14,19 +14,11 @@ require_once('../../connection/connection.php');
 
 //Checking call API method
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $company_id = $_POST['company_id'];
-    $supplier_name = $_POST['supplier_name'];
-    $supplier_origin = $_POST['supplier_origin'];
-    $supplier_address = $_POST['supplier_address'];
-    $supplier_phone = $_POST['supplier_phone'];
-    $supplier_pic_name = $_POST['supplier_pic_name'];
-    $supplier_pic_contact = $_POST['supplier_pic_contact'];
-    $supplier_currency = $_POST['supplier_currency'];
-    $supplier_term = $_POST['supplier_term'];
+    $ppn_name = $_POST['ppn_name'];
 
-    $insert_supplier_query = "INSERT INTO supplier (supplier_id, company, supplier_name, supplier_origin, supplier_address, supplier_phone, supplier_pic_name, supplier_pic_contact, supplier_currency, supplier_term) VALUES (UUID(), '$company_id','$supplier_name', '$supplier_origin', '$supplier_address', '$supplier_phone', '$supplier_pic_name', '$supplier_pic_contact', '$supplier_currency', '$supplier_term');";
+    $query = "INSERT INTO salesPPNType (PPNTYPE_id, PPNType_name) VALUES (UUID(), '$ppn_name');";
 
-    if(mysqli_query($connect, $insert_supplier_query)){
+    if(mysqli_query($connect, $query)){
         http_response_code(200);
         echo json_encode(
             array(
@@ -41,7 +33,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             array(
                 "StatusCode" => 500,
                 'Status' => 'Error',
-                "message" => "Error: Unable to update data - " . mysqli_error($connect)
+                "message" => "Error: Unable to insert data - " . mysqli_error($connect)
             )
         );
     }
@@ -56,5 +48,3 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         )
     );
 }
-
-?>

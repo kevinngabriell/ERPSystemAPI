@@ -10,25 +10,25 @@ ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
 // Connection access
-require_once('../connection/connection.php');
+require_once('../../connection/connection.php');
 
 // Checking call API method
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $PONumber = $_GET['PONumber'];
 
     // First, count the number of records with the same salesOrderNumber
-    $count_query = "SELECT COUNT(*) as total FROM purchaseOrderItem WHERE PONumber = '$PONumber'";
+    $count_query = "SELECT COUNT(*) as total FROM PurchaseInvoiceItem WHERE PONumber = '$PONumber'";
     $count_result = mysqli_query($connect, $count_query);
     $count_row = mysqli_fetch_assoc($count_result);
     $total_records = $count_row['total'];
 
     if($total_records > 0){
-        $purchase_query = "SELECT A1.PONumber, A1.PODate, A1.POSupplier, A2.supplier_pic_name, A1.POPayment, A1.POOrigin, A1.POStatus, A1.POType, A1.POShipmentDate, A3.PO_Status_Name, A1.InsertDt, A2.supplier_name, A1.InsertBy, A4.payment_name
-            FROM purchaseOrder A1
-            LEFT JOIN supplier A2 ON A1.POSupplier = A2.supplier_id
-            LEFT JOIN purchaseStatus A3 ON A1.POStatus = A3.PO_Status_ID
-            LEFT JOIN payment A4 ON A1.POPayment = A4.payment_id
-            WHERE A1.PONumber = '$PONumber';";
+        $purchase_query = "SELECT A2.supplier_name, A1.PONumber, A1.invoiceNumber, A1.invoiceDate, A1.shipDate, A1.kurs, A1.term, A1.InsertBy, A1.InsertDt, A4.PO_Status_Name
+    FROM purchaseInvoice A1
+    LEFT JOIN supplier A2 ON A1.supplier = A2.supplier_id
+    LEFT JOIN purchaseOrder A3 ON A3.PONumber = A1.PONumber
+    LEFT JOIN purchaseStatus A4 ON A3.POStatus = A4.PO_Status_ID
+    WHERE A1.PONumber = '$PONumber';";
 
         $purchase_result = mysqli_query($connect, $purchase_query);
         $purchase_array = array();
@@ -37,33 +37,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             array_push(
                 $purchase_array,
                 array(
+                    'supplier_name' => $purchase_row['supplier_name'],
                     'PONumber' => $purchase_row['PONumber'],
-                    'PODate' => $purchase_row['PODate'],
-                    'POSupplier' => $purchase_row['POSupplier'],
-                    'POShipment' => $purchase_row['POShipmentDate'],
-                    'POSupplierPIC' => $purchase_row['supplier_pic_name'],
-                    'POPayment' => $purchase_row['POPayment'],
-                    'POOrigin' => $purchase_row['POOrigin'],
-                    'POStatus' => $purchase_row['POStatus'],
-                    'POStatusName' => $purchase_row['PO_Status_Name'],
-                    'POType' => $purchase_row['POType'],
-                    'InsertDt' => $purchase_row['InsertDt'],
-                    'supplierName' => $purchase_row['supplier_name'],
+                    'invoiceNumber' => $purchase_row['invoiceNumber'],
+                    'invoiceDate' => $purchase_row['invoiceDate'],
+                    'shipDate' => $purchase_row['shipDate'],
+                    'kurs' => $purchase_row['kurs'],
+                    'term' => $purchase_row['term'],
                     'InsertBy' => $purchase_row['InsertBy'],
-                    'payment_name' => $purchase_row['payment_name'],
+                    'InsertDt' => $purchase_row['InsertDt'],
+                    'PO_Status_Name' => $purchase_row['PO_Status_Name']
                 )
             );
         }
-
     } else {
 
     }
 
     function fetchItems($connect, $PONumber, $limit, $offset){
-        $sales_item_query = "SELECT *
-            FROM purchaseOrderItem
+        $sales_item_query = "SELECT * 
+            FROM PurchaseInvoiceItem
             WHERE PONumber = '$PONumber' 
-            ORDER BY POProductName 
+            ORDER BY ProductName 
             LIMIT $limit OFFSET $offset;";
 
         $sales_item_result = mysqli_query($connect, $sales_item_query);
@@ -74,10 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 array_push(
                     $sales_array,
                     array(
-                        'POProductName' => $sales_item_row['POProductName'],
-                        'POQuantity' => $sales_item_row['POQuantity'],
-                        'POPackagingSize' => $sales_item_row['POPackagingSize'],
-                        'POUnitPrice' => $sales_item_row['POUnitPrice']
+                        'ProductName' => $sales_item_row['ProductName'],
+                        'Quantity' => $sales_item_row['Quantity'],
+                        'PackagingSize' => $sales_item_row['PackagingSize'],
+                        'UnitPrice' => $sales_item_row['UnitPrice']
                     )
                 );
             }
@@ -85,10 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             array_push(
                 $sales_array,
                 array(
-                    'POProductName' => NULL,
-                    'POQuantity' => NULL,
-                    'POPackagingSize' => NULL,
-                    'POUnitPrice' => NULL
+                    'ProductName' => NULL,
+                    'Quantity' => NULL,
+                    'PackagingSize' => NULL,
+                    'UnitPrice' => NULL
                 )
             );
         }
@@ -117,8 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         array(
             "StatusCode" => 404,
             'Status' => 'Error',
-            "message" => "Error: Invalid method. Only GET requests are allowed."
+            "message" => "Error: API not found"
         )
     );
 }
-?>

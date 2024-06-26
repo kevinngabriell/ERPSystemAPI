@@ -14,25 +14,17 @@ require_once('../../connection/connection.php');
 
 //Checking call API method
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $company_id = $_POST['company_id'];
-    $supplier_name = $_POST['supplier_name'];
-    $supplier_origin = $_POST['supplier_origin'];
-    $supplier_address = $_POST['supplier_address'];
-    $supplier_phone = $_POST['supplier_phone'];
-    $supplier_pic_name = $_POST['supplier_pic_name'];
-    $supplier_pic_contact = $_POST['supplier_pic_contact'];
-    $supplier_currency = $_POST['supplier_currency'];
-    $supplier_term = $_POST['supplier_term'];
+    $account_code = $_POST['account_code'];
 
-    $insert_supplier_query = "INSERT INTO supplier (supplier_id, company, supplier_name, supplier_origin, supplier_address, supplier_phone, supplier_pic_name, supplier_pic_contact, supplier_currency, supplier_term) VALUES (UUID(), '$company_id','$supplier_name', '$supplier_origin', '$supplier_address', '$supplier_phone', '$supplier_pic_name', '$supplier_pic_contact', '$supplier_currency', '$supplier_term');";
+    $query = "DELETE FROM account_code WHERE code = '$account_code'";
 
-    if(mysqli_query($connect, $insert_supplier_query)){
+    if(mysqli_query($connect, $query)){
         http_response_code(200);
         echo json_encode(
             array(
                 "StatusCode" => 200,
                 'Status' => 'Success',
-                "message" => "Success: Data inserted successfully"
+                "message" => "Success: Data deleted successfully"
             )
         );
     } else {
@@ -52,9 +44,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         array(
             "StatusCode" => 404,
             'Status' => 'Error',
-            "message" => "Error: Invalid method. Only GET requests are allowed."
+            "message" => "Error: Invalid method. Only POST requests are allowed."
         )
     );
 }
-
-?>

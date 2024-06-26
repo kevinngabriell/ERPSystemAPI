@@ -10,23 +10,23 @@ ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
 //Connection access
-require_once('../../connection/connection.php');
+require_once('../connection/connection.php');
 
 //Checking call API method
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $company_id = $_POST['company_id'];
-    $supplier_name = $_POST['supplier_name'];
-    $supplier_origin = $_POST['supplier_origin'];
-    $supplier_address = $_POST['supplier_address'];
-    $supplier_phone = $_POST['supplier_phone'];
-    $supplier_pic_name = $_POST['supplier_pic_name'];
-    $supplier_pic_contact = $_POST['supplier_pic_contact'];
-    $supplier_currency = $_POST['supplier_currency'];
-    $supplier_term = $_POST['supplier_term'];
+    $sales_order_number = $_POST['sales_order_number'];
+    $sales_order_status = '704908b0-1efc-11ef-a';
+    $update_by = $_POST['update_by'];
+    $currentDateTime = new DateTime();
+    $indonesiaTimeZone = new DateTimeZone('Asia/Jakarta');
+    $currentDateTime->setTimezone($indonesiaTimeZone);
+    $currentDateTimeString = $currentDateTime->format("Y-m-d H:i:s");
+    $action = "Draft sales order telah disetujui";
 
-    $insert_supplier_query = "INSERT INTO supplier (supplier_id, company, supplier_name, supplier_origin, supplier_address, supplier_phone, supplier_pic_name, supplier_pic_contact, supplier_currency, supplier_term) VALUES (UUID(), '$company_id','$supplier_name', '$supplier_origin', '$supplier_address', '$supplier_phone', '$supplier_pic_name', '$supplier_pic_contact', '$supplier_currency', '$supplier_term');";
+    $update_approve_query = "UPDATE salesOrder SET SOStatus = '$sales_order_status', UpdateBy = '$update_by', UpdateDt = '$currentDateTimeString' WHERE SONumber = '$sales_order_number'";
+    $insert_action_query = "INSERT INTO salesOrderHistory (SONumber, Action, ActionBy, ActionDt) VALUES ('$sales_order_number', '$action', '$update_by', '$currentDateTimeString');";
 
-    if(mysqli_query($connect, $insert_supplier_query)){
+    if(mysqli_query($connect, $update_approve_query) && mysqli_query($connect, $insert_action_query)){
         http_response_code(200);
         echo json_encode(
             array(
@@ -52,9 +52,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         array(
             "StatusCode" => 404,
             'Status' => 'Error',
-            "message" => "Error: Invalid method. Only GET requests are allowed."
+            "message" => "Error: Invalid method. Only POST requests are allowed."
         )
     );
 }
-
 ?>

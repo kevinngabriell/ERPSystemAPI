@@ -14,19 +14,11 @@ require_once('../../connection/connection.php');
 
 //Checking call API method
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $company_id = $_POST['company_id'];
-    $supplier_name = $_POST['supplier_name'];
-    $supplier_origin = $_POST['supplier_origin'];
-    $supplier_address = $_POST['supplier_address'];
-    $supplier_phone = $_POST['supplier_phone'];
-    $supplier_pic_name = $_POST['supplier_pic_name'];
-    $supplier_pic_contact = $_POST['supplier_pic_contact'];
-    $supplier_currency = $_POST['supplier_currency'];
-    $supplier_term = $_POST['supplier_term'];
+    $sales_status_name = $_POST['sales_status_name'];
 
-    $insert_supplier_query = "INSERT INTO supplier (supplier_id, company, supplier_name, supplier_origin, supplier_address, supplier_phone, supplier_pic_name, supplier_pic_contact, supplier_currency, supplier_term) VALUES (UUID(), '$company_id','$supplier_name', '$supplier_origin', '$supplier_address', '$supplier_phone', '$supplier_pic_name', '$supplier_pic_contact', '$supplier_currency', '$supplier_term');";
+    $insert_sales_status_query = "INSERT INTO salesStatus (SO_Status_ID, SO_Status_Name) VALUES (UUID(), '$sales_status_name');";
 
-    if(mysqli_query($connect, $insert_supplier_query)){
+    if(mysqli_query($connect, $insert_sales_status_query)){
         http_response_code(200);
         echo json_encode(
             array(

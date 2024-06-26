@@ -15,7 +15,7 @@ require_once('../connection/connection.php');
 // Checking call API method
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    $pending_query = "SELECT COUNT(*) as pending FROM purchaseOrder WHERE POStatus = 'd7ab6134-d157-11ee-8';";
+    $pending_query = "SELECT COUNT(*) as pending FROM purchaseOrder WHERE POStatus = 'd7ab6134-d157-11ee-8' AND PODate >= CURDATE() - INTERVAL 1 YEAR";
     $pending_result = mysqli_query($connect, $pending_query);
 
     $pending_array = array();
@@ -23,7 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $pending = $pending_row['pending'];
     }
 
-    $top_item_query = "SELECT POProductName, COUNT(*) as frequency FROM purchaseOrderItem GROUP BY POProductName ORDER BY frequency DESC LIMIT 1;";
+    $top_item_query = "SELECT POI.POProductName, COUNT(*) AS frequency
+                        FROM purchaseOrderItem POI
+                        JOIN purchaseOrder PO ON POI.PONumber = PO.PONumber
+                        WHERE PO.PODate >= CURDATE() - INTERVAL 1 YEAR
+                        GROUP BY POI.POProductName
+                        ORDER BY frequency DESC
+                        LIMIT 1;";
     $top_item_result = mysqli_query($connect, $top_item_query);
 
     $top_item_array = array();
@@ -34,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $total_query = "SELECT SUM(A1.POUnitPrice * A1.POQuantity * 1.11) AS total
     FROM purchaseOrderItem A1
     JOIN purchaseOrder A2 ON A1.PONumber = A2.PONumber
-    WHERE MONTH(A2.PODate) = MONTH(CURRENT_DATE()) AND YEAR(A2.PODate) = YEAR(CURRENT_DATE());";
+    WHERE A2.PODate >= CURDATE() - INTERVAL 1 YEAR;";
     $total_result = mysqli_query($connect, $total_query);
 
     $total_array = array();
